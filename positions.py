@@ -6,6 +6,8 @@ import pandas as pd
 
 app = dash.Dash()
 
+server = app.server
+
 df = pd.read_csv(
     "data/lap_table.csv",
     sep=";"
