@@ -19,8 +19,10 @@ def update_drivers_region_graph():
     df = read_driver_data()
 
     df_grouped = df.groupby(['d_two_letter_continent_code', 'd_two_letter_country_code']).size().reset_index(name='counts')
-    
+
     fig = px.sunburst(df_grouped, path=["d_two_letter_continent_code", "d_two_letter_country_code"], values="counts")
+
+    fig.update_layout(paper_bgcolor="#D3D3D3")
 
     return dcc.Graph(id="region_overview", figure=fig)
 
