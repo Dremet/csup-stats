@@ -1,6 +1,18 @@
 
 body {
-    background-color : rgb(251, 252, 247);
-    color: rgb(54, 77, 170);
-    font-family: 'Trebuchet MS', sans-serif;
+    
+}
+
+h1 {
+    color: rgb(70,32,91);
+    border-bottom: 1px solid rgb(255,55,117);
+    margin-bottom: 10px;
+}
+
+p {
+    /*color: rgb(255,55,117);*/
+}
+
+.svg-container{
+    /*background-color: var(--bs-dark);*/
 }
