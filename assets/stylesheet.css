@@ -16,3 +16,38 @@ p {
 .svg-container{
     /*background-color: var(--bs-dark);*/
 }
+
+.graph_header{
+    padding-left: 20px;
+    margin-top: 30px;
+    border-bottom: 1px solid rgb(255,55,117);
+}
+
+.dropdown_header{
+    margin-top: 10px;
+    border-bottom: 1px solid rgb(70,32,91);
+}
+
+.table_header{
+    padding-left: 20px;
+    margin-top: 10px;
+    border-bottom: 1px solid rgb(255,55,117);
+}
+
+.card-header{
+    font-size: 20px;
+    /*font-weight: bold;*/
+}
+
+.dash-header{
+    background-color: rgb(255,55,117) !important;
+}
+
+#important-footer-note{
+    font-weight: bold;
+}
+
+/* .nav-item.active{
+    border: 1px solid rgb(255,55,117) !important;
+    color: rgb(70,32,91);
+} */
