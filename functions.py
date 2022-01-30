@@ -143,7 +143,7 @@ def get_driver_results(cs, league, season):
         't_primary_color', 't_secondary_color', 't_tertiary_color', 'd_id',
         'd_name', 'd_two_letter_country_code', 'd_two_letter_continent_code',
         'd_steering_device', 'd_elo']]
-    print(df.loc[(df["d_name"] == "Nico Minardi"), :].to_csv("test.csv"))
+    
     
     # fill gaps
     df = fill_race_gaps(df)

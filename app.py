@@ -273,7 +273,7 @@ def render_tab_content(active_tab):
                                         [
                                             html.H5("Calculations performed among all players across all leagues", className="card-title"),
                                             html.P(
-                                                "Players that missed one or more races are excluded. A full league is excluded, if there are no race times for any race. When players where lapped, their average lap time is added to the race time multiplied by the amount of lappings. "
+                                                "Players that missed one or more races are excluded in the content below. A full league is excluded, if there are no race times for any race. When players where lapped, their average lap time is added to the race time multiplied by the amount of lappings. "
                                                 "The overall ranking can be highly influenced by one single very bad race result. "
                                                 "Possible future change: Delete worst race result before calculating mean position so that one bad result has no effect.", 
                                                 className="card-text",
@@ -423,7 +423,7 @@ def render_tab_content(active_tab):
 def update_available_leagues_for_season_standings(season_cs):
     leagues = get_league_by_cs(season_cs)
     options = [{'label': league, 'value': league} for league in leagues]
-    default = leagues[-1]
+    default = leagues[0]
     return options, default
 
 @app.callback(
@@ -433,7 +433,7 @@ def update_available_leagues_for_season_standings(season_cs):
 def update_available_seasons_for_season_standings(season_cs, season_league):
     seasons = get_seasons_by_cs_and_league(season_cs, season_league)
     options = [{'label': season, 'value': season} for season in seasons]
-    default = seasons[-1]
+    default = max(seasons)
     return options, default
 
 # race results
@@ -444,7 +444,7 @@ def update_available_seasons_for_season_standings(season_cs, season_league):
 def update_available_leagues_for_race_results(race_cs):
     leagues = get_league_by_cs(race_cs)
     options = [{'label': league, 'value': league} for league in leagues]
-    default = leagues[-1]
+    default = leagues[0]
     return options, default
 
 @app.callback(
@@ -454,7 +454,7 @@ def update_available_leagues_for_race_results(race_cs):
 def update_available_seasons_for_race_results(race_cs, race_league):
     seasons = get_seasons_by_cs_and_league(race_cs, race_league)
     options = [{'label': season, 'value': season} for season in seasons]
-    default = seasons[-1]
+    default = max(seasons)
     return options, default
 
 @app.callback(
@@ -490,7 +490,7 @@ def update_available_events_for_race_results(race_event):
 def update_available_leagues_for_season_standings(misc_cs):
     seasons = get_seasons_by_cs(misc_cs)
     options = [{'label': season, 'value': season} for season in seasons]
-    default = seasons[-1]
+    default = max(seasons)
     return options, default
 
 
@@ -504,14 +504,25 @@ def update_available_leagues_for_season_standings(misc_cs):
 )
 def update_team_standings_graph(season_cs, season_league, season):
     df = get_team_standings_cumulative(cs=season_cs, league=season_league, season=season)
-    df["track_car"] = df["r_track"]+"\n"+df["r_car"]
+    df["track_car"] = df["r_track"]+" - "+df["r_car"]
     
     df.sort_values("e_date", inplace=True, ascending=True)
     df = df.reset_index()
-    #print(df)
-    #print(df)
+    
     fig = px.line(df, x="track_car", y="points_cum", color="t_name", title='Team Standings')
     fig.layout = transparent_layout
+
+    fig.update_layout(
+        #title="Plot Title",
+        #xaxis_title="X Axis Title",
+        yaxis_title="Points",
+        legend_title="Team",
+        # font=dict(
+        #     family="Courier New, monospace",
+        #     size=18,
+        #     color="RebeccaPurple"
+        # )
+    )
 
     return fig
 
@@ -522,14 +533,24 @@ def update_team_standings_graph(season_cs, season_league, season):
 )
 def update_driver_standings_graph(season_cs, season_league, season):
     df = get_driver_standings_cumulative(cs=season_cs, league=season_league, season=season)
-    df["track_car"] = df["r_track"]+"\n"+df["r_car"]
+    df["track_car"] = df["r_track"]+" - "+df["r_car"]
 
     df.sort_values("e_date", inplace=True, ascending=True)
 
-    #print(df)
-
     fig = px.line(df, x="track_car", y="points_cum", color="d_name", title='Driver Standings')
     fig.layout = transparent_layout
+
+    fig.update_layout(
+        #title="Plot Title",
+        #xaxis_title="X Axis Title",
+        yaxis_title="Points",
+        legend_title="Driver",
+        # font=dict(
+        #     family="Courier New, monospace",
+        #     size=18,
+        #     color="RebeccaPurple"
+        # )
+    )
 
     return fig
 
