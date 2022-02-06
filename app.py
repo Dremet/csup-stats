@@ -444,8 +444,8 @@ def render_tab_content(active_tab):
                             ),
                             dbc.AccordionItem(
                                 [
-                                    html.P("Calculate ELO for all drivers and on the drivers tab, a table with the current ELO ranking of each driver as well as a graph with the historical changes in ELO of each driver will be added. Currently in discussions with Bixon und Muritopin. There is a lot to discuss and code."),
-                                    dbc.Alert("Very high effort", color="danger")
+                                    html.P("Show the current and historical ELO from all drivers. This data will be based on calculations by Muritopin and Bixon."),
+                                    dbc.Alert("High effort", color="danger")
                                 ],
                                 title="ELO Ranking",
                             ),
