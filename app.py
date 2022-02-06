@@ -613,7 +613,7 @@ def update_team_standings_graph(season_cs, season_league, season):
     df.sort_values("e_date", inplace=True, ascending=True)
     df = df.reset_index()
     
-    fig = px.line(df, x="track_car", y="points_cum", color="t_name", title='Team Standings')
+    fig = px.line(df, x="track_car", y="points_cum", color="t_name", title='Team Standings', markers=True)
     fig.layout = transparent_layout
 
     fig.update_layout(
@@ -641,7 +641,7 @@ def update_driver_standings_graph(season_cs, season_league, season):
 
     df.sort_values("e_date", inplace=True, ascending=True)
 
-    fig = px.line(df, x="track_car", y="points_cum", color="d_name", title='Driver Standings')
+    fig = px.line(df, x="track_car", y="points_cum", color="d_name", title='Driver Standings', markers=True)
     fig.layout = transparent_layout
 
     fig.update_layout(
@@ -840,7 +840,7 @@ def update_league_clouds(misc_cs, misc_season):
         inplace=True
     )
 
-    fig = px.scatter(df, x="Sum Race Times [min]", y="Sum Points", color="League", hover_data=['Driver'], size = "Sum Points") #,size='petal_length'
+    fig = px.scatter(df, x="Sum Race Times [min]", y="Sum Points", color="League", hover_data=['Driver'], size = "Sum Points", opacity=0.5) #,size='petal_length'
 
     return fig
 
