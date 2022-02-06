@@ -97,7 +97,8 @@ def render_tab_content(active_tab):
                                 id='season_cs',
                                 options=[
                                     {'label': 'ICSTC', 'value': 'ICSTC'},
-                                    #{'label': 'ICSES', 'value': 'ICSES'}
+                                    {'label': 'ICSES', 'value': 'ICSES'},
+                                    {'label': 'ICSAS', 'value': 'ICSAS'}
                                 ],
                                 value='ICSTC'
                             )]
@@ -129,7 +130,9 @@ def render_tab_content(active_tab):
                         )]
                     ),
                     dbc.Row([
-                        dbc.Col([html.H3("Teams", className="graph_header"), dcc.Graph(id="team_standings")]),
+                        dbc.Col([html.H3("Teams", className="graph_header"), dcc.Graph(id="team_standings")], id="col_team_standings")
+                    ]),
+                    dbc.Row([
                         dbc.Col([html.H3("Drivers", className="graph_header"), dcc.Graph(id="driver_standings")])
                     ])
                 ])
@@ -141,7 +144,8 @@ def render_tab_content(active_tab):
                                 id='race_cs',
                                 options=[
                                     {'label': 'ICSTC', 'value': 'ICSTC'},
-                                    #{'label': 'ICSES', 'value': 'ICSES'}
+                                    {'label': 'ICSES', 'value': 'ICSES'},
+                                    {'label': 'ICSAS', 'value': 'ICSAS'}
                                 ],
                                 value='ICSTC'
                             )]
@@ -247,7 +251,9 @@ def render_tab_content(active_tab):
                             dcc.Dropdown(
                                 id='misc_cs',
                                 options=[
-                                    {'label': 'ICSTC', 'value': 'ICSTC'}
+                                    {'label': 'ICSTC', 'value': 'ICSTC'},
+                                    {'label': 'ICSES', 'value': 'ICSES'},
+                                    {'label': 'ICSAS', 'value': 'ICSAS'}
                                 ],
                                 value='ICSTC'
                             )]
@@ -329,6 +335,27 @@ def render_tab_content(active_tab):
                         [
                             dbc.AccordionItem(
                                 [
+                                    html.P("Show penalties in results. Also, correct handling of fastest lap points, if two drivers got the same time."),
+                                    dbc.Alert("Low effort", color="success")
+                                ],
+                                title="Penalties",
+                            ),
+                            dbc.AccordionItem(
+                                [
+                                    html.P("Description of Championship below dropdowns."),
+                                    dbc.Alert("Low effort", color="success")
+                                ],
+                                title="Description of Championship",
+                            ),
+                            dbc.AccordionItem(
+                                [
+                                    html.P("Change false/true to yes/no in race results table."),
+                                    dbc.Alert("Low effort", color="success")
+                                ],
+                                title="Change false/true to yes/no",
+                            ),
+                            dbc.AccordionItem(
+                                [
                                     html.P("In order to easier compare points, the season standings will be shown in a table as well. Will be located below the season standing graphs."),
                                     dbc.Alert("Low effort", color="success")
                                 ],
@@ -354,13 +381,6 @@ def render_tab_content(active_tab):
                                     dbc.Alert("Medium effort", color="primary")
                                 ],
                                 title="Prettify Graphs",
-                            ),
-                            dbc.AccordionItem(
-                                [
-                                    html.P("Add data for ICSES and ICSAS. You will be able to select those championships in the first dropdown menu on all tabs respectively."),
-                                    dbc.Alert("High effort", color="warning")
-                                ],
-                                title="Add ICSES and ICSAS",
                             ),
                             dbc.AccordionItem(
                                 [
@@ -487,11 +507,25 @@ def update_available_events_for_race_results(race_event):
     [dash.dependencies.Output("misc_season", "options"), dash.dependencies.Output("misc_season", "value")], 
     dash.dependencies.Input("misc_cs", "value")
 )
-def update_available_leagues_for_season_standings(misc_cs):
+def update_dropdowns_misc(misc_cs):
     seasons = get_seasons_by_cs(misc_cs)
+    print("seasons", seasons)
     options = [{'label': season, 'value': season} for season in seasons]
     default = max(seasons)
     return options, default
+
+###############################################
+###          Toogle Team Graphs             ###
+###############################################
+@app.callback(
+    dash.dependencies.Output('col_team_standings', 'style'),
+    dash.dependencies.Input('season_cs', 'value'),
+)
+def toggle_team_output(season_cs):
+    if does_cs_contain_teams(season_cs):
+        return {'display': 'block'}
+    else:
+        return {'display': 'none'}
 
 
 ###############################################
@@ -594,6 +628,7 @@ def update_drivers_race_table(race_cs, race_league, race_season, race_event, rac
         "t_tag" : "Team Tag", 
         "q_lap_time_seconds" : "Quali Time",
         "quali_points" : "Quali Points", 
+        "rr_position" : "Pos",
         "rr_fastest_lap_seconds" : "Fastest Lap", 
         "fastest_lap_points" : "Points Fastest Lap", 
         "rr_race_time_seconds" : "Race Time", 
@@ -602,6 +637,12 @@ def update_drivers_race_table(race_cs, race_league, race_season, race_event, rac
         }, 
         inplace=True
     )
+
+    df_race.sort_values("Pos", ascending=True, inplace=True)
+
+    df_race.loc[df_race["Pos"].isnull(), "Pos"] = 0
+    df_race["Pos"] = df_race["Pos"].astype(int).astype(str)
+    df_race.loc[df_race["Pos"]=="0", "Pos"] = "DNS"
 
     def sec_to_readable_time(secs):
         if np.isnan(secs):
@@ -614,10 +655,9 @@ def update_drivers_race_table(race_cs, race_league, race_season, race_event, rac
 
         return f"{str_min}:{str_secs}.{str_msecs}"
     
+    
     df_race["Race Time"] = df_race["Race Time"].apply(sec_to_readable_time)
     
-    df_race.sort_values("Race Points", ascending=False, inplace=True)
-
     results_columns = [{"name": i, "id": i} for i in df_race.columns]
     results_data = df_race.to_dict('records')
 
@@ -689,6 +729,8 @@ def update_drivers_device_graph():
 def update_virtual_table(misc_cs, misc_season):
     df = get_virtual_table_data(misc_cs, misc_season)
 
+    df = df.loc[df["l_name"] != "Final",:]
+
     df["mean_place"] = df["mean_place"].round(1)
 
     df.rename(columns={
@@ -713,6 +755,8 @@ def update_virtual_table(misc_cs, misc_season):
 )
 def update_league_clouds(misc_cs, misc_season):
     df = get_league_clouds(misc_cs, misc_season)
+
+    df = df.loc[df["l_name"] != "Final",:]
 
     df["sum_race_times"] = df["sum_race_times"]/60.
 

@@ -12,6 +12,13 @@ def read_sql_template(sql_file):
     file_path = PATH_SQL_TEMPLATES / sql_file
     return file_path.read_text().replace('\n', ' ')
 
+def does_cs_contain_teams(cs):
+    with Connection() as conn:
+        cs = pd.read_sql("select c_has_teams from base.championships where c_name = %(cs)s", 
+            params=dict(zip(["cs"],[cs])),
+            con=conn)
+    
+    return cs["c_has_teams"].iloc[0]
 
 def get_league_by_cs(cs) -> List:
     with Connection() as conn:
@@ -28,7 +35,8 @@ def get_seasons_by_cs(cs) -> List:
     with Connection() as conn:
         seasons = pd.read_sql("select s_desc from base.seasons s "
             "left join base.leagues l on s.l_l_id = l.l_id "
-            "left join base.championships c on l.c_c_id = c.c_id and c_name = %(cs)s ", 
+            "left join base.championships c on l.c_c_id = c.c_id " 
+            "where c_name = %(cs)s ", 
             params=dict(zip(["cs"],[cs])),
             con=conn)
     
@@ -214,8 +222,11 @@ def get_race_meta_data_and_race_results(cs, league, season, event_id, race):
     ]].iloc[[0],:]
 
     df_race = df[[
-        "d_name", "t_tag", "q_lap_time_seconds", "quali_points", "rr_fastest_lap_seconds", "fastest_lap_points", "rr_race_time_seconds", "race_points", "points"
+         "rr_position", "d_name", "t_tag", "q_lap_time_seconds", "quali_points","rr_fastest_lap_seconds", "fastest_lap_points", "rr_race_time_seconds", "race_points", "points"
     ]]
+
+    if not does_cs_contain_teams(cs):
+        del df_race["t_tag"]
 
     return df_meta, df_race
 
@@ -255,6 +266,9 @@ def get_league_spanning_data(cs, season):
     # this can happen if future events are in the database f.e.
     df.dropna(subset=["r_id"], inplace=True)
     
+    # ICSTC, Season 3, Experts were not able to race due to server issues
+    # all other four leagues did race and are excluded here
+    df.drop(df[df.r_id.isin([268,269,270,271])].index, inplace=True)
 
     # we do not need the foreign keys when we have the primary keys
     df.drop(labels=[
