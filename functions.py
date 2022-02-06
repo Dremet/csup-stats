@@ -20,6 +20,14 @@ def does_cs_contain_teams(cs):
     
     return cs["c_has_teams"].iloc[0]
 
+def get_cs_description(cs):
+    with Connection() as conn:
+        cs = pd.read_sql("select c_description from base.championships where c_name = %(cs)s", 
+            params=dict(zip(["cs"],[cs])),
+            con=conn)
+    
+    return cs["c_description"].iloc[0]
+
 def get_league_by_cs(cs) -> List:
     with Connection() as conn:
         leagues = pd.read_sql("select l_name from base.leagues l "

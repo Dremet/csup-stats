@@ -129,6 +129,24 @@ def render_tab_content(active_tab):
                             )]
                         )]
                     ),
+                    dbc.Row(dbc.Col(
+                        dbc.Card(
+                            [
+                                dbc.CardBody(
+                                    [
+                                        html.P(
+                                            "", 
+                                            id="cs_description_standings",
+                                            style={"margin":"2px"}
+                                        )
+                                    ]
+                                )
+                            ], 
+                            color="dark", 
+                            inverse=True,
+                            style={"margin-bottom": "10px", "margin-top": "10px"}
+                        )
+                    )),
                     dbc.Row([
                         dbc.Col([html.H3("Teams", className="graph_header"), dcc.Graph(id="team_standings")], id="col_team_standings")
                     ]),
@@ -193,6 +211,24 @@ def render_tab_content(active_tab):
                         )
                         ]
                     ),
+                    dbc.Row(dbc.Col(
+                        dbc.Card(
+                            [
+                                dbc.CardBody(
+                                    [
+                                        html.P(
+                                            "", 
+                                            id="cs_description_race_results",
+                                            style={"margin":"2px"}
+                                        )
+                                    ]
+                                )
+                            ], 
+                            color="dark", 
+                            inverse=True,
+                            style={"margin-bottom": "10px", "margin-top": "10px"}
+                        )
+                    )),
                     dbc.Row([html.H3("Race Details", className="table_header")], style={"margin-top":"10px"}),
                     dbc.Row([
                         dbc.Col(
@@ -269,7 +305,24 @@ def render_tab_content(active_tab):
                                 value='2'
                             )]
                         )
-                    ]),
+                    ]),dbc.Row(dbc.Col(
+                        dbc.Card(
+                            [
+                                dbc.CardBody(
+                                    [
+                                        html.P(
+                                            "", 
+                                            id="cs_description_misc",
+                                            style={"margin":"2px"}
+                                        )
+                                    ]
+                                )
+                            ], 
+                            color="dark", 
+                            inverse=True,
+                            style={"margin-bottom": "10px", "margin-top": "10px"}
+                        )
+                    )),
                     dbc.Row(
                         dbc.Col([
                             dbc.Card(
@@ -313,7 +366,7 @@ def render_tab_content(active_tab):
                                             html.H5("In order to understand, which data was used, please see the info box above.", className="card-title"),
                                             html.P(
                                                 "This graph called 'League Clouds' gives an overview of skill differences between leagues. "
-                                                "Given a certain skill (=certain sum of race time) one gets less points in higher leagues than in the lower ones. "
+                                                "If applicable: Given a certain skill (=certain sum of race time) one gets less points in higher leagues than in the lower ones. "
                                                 "If leagues would be perfectly balanced, you would see parallel lines with different colors (=leagues) next to each other with the highest league on the left. ", 
                                                 className="card-text",
                                             ),
@@ -527,6 +580,30 @@ def toggle_team_output(season_cs):
     else:
         return {'display': 'none'}
 
+
+###############################################
+###        Championship Description         ###
+###############################################
+@app.callback(
+    dash.dependencies.Output('cs_description_standings', 'children'),
+    dash.dependencies.Input('season_cs', 'value'),
+)
+def show_cs_description_standings(season_cs):
+    return get_cs_description(season_cs)
+
+@app.callback(
+    dash.dependencies.Output('cs_description_race_results', 'children'),
+    dash.dependencies.Input('race_cs', 'value'),
+)
+def show_cs_description_race_results(season_cs):
+    return get_cs_description(season_cs)
+
+@app.callback(
+    dash.dependencies.Output('cs_description_misc', 'children'),
+    dash.dependencies.Input('misc_cs', 'value'),
+)
+def show_cs_description_misc(season_cs):
+    return get_cs_description(season_cs)
 
 ###############################################
 ###            Season Standings             ###
