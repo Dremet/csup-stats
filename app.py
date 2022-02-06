@@ -388,13 +388,6 @@ def render_tab_content(active_tab):
                         [
                             dbc.AccordionItem(
                                 [
-                                    html.P("Description of Championship below dropdowns."),
-                                    dbc.Alert("Low effort", color="success")
-                                ],
-                                title="Description of Championship",
-                            ),
-                            dbc.AccordionItem(
-                                [
                                     html.P("Change false/true to yes/no in race results table."),
                                     dbc.Alert("Low effort", color="success")
                                 ],
