@@ -335,13 +335,6 @@ def render_tab_content(active_tab):
                         [
                             dbc.AccordionItem(
                                 [
-                                    html.P("Show penalties in results. Also, correct handling of fastest lap points, if two drivers got the same time."),
-                                    dbc.Alert("Low effort", color="success")
-                                ],
-                                title="Penalties",
-                            ),
-                            dbc.AccordionItem(
-                                [
                                     html.P("Description of Championship below dropdowns."),
                                     dbc.Alert("Low effort", color="success")
                                 ],
@@ -360,6 +353,13 @@ def render_tab_content(active_tab):
                                     dbc.Alert("Low effort", color="success")
                                 ],
                                 title="Season Standings as Table",
+                            ),
+                            dbc.AccordionItem(
+                                [
+                                    html.P("For team championships: Table showing which driver is in which team."),
+                                    dbc.Alert("Medium effort", color="primary")
+                                ],
+                                title="Team Driver Mapping Table",
                             ),
                             dbc.AccordionItem(
                                 [
@@ -632,6 +632,7 @@ def update_drivers_race_table(race_cs, race_league, race_season, race_event, rac
         "rr_fastest_lap_seconds" : "Fastest Lap", 
         "fastest_lap_points" : "Points Fastest Lap", 
         "rr_race_time_seconds" : "Race Time", 
+        "rr_penalty_description" : "Penalty", 
         "race_points" : "Race Points", 
         "points" : "Points"
         }, 

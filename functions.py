@@ -144,7 +144,7 @@ def get_driver_results(cs, league, season):
         'e_points_pos_10', 'e_points_pos_11', 'e_points_pos_12',
         'e_points_for_pole', 'e_points_for_fastest_lap', 's_id', 
         's_desc', 'l_id', 'l_name', 'c_id', 'c_name', 'c_has_teams',
-        'c_region', 'rr_id', 'rr_position',
+        'c_region', 'rr_id', 'rr_position', 'rr_penalty_description',
         'rr_race_time_seconds', 'rr_lappings', 'rr_fastest_lap_seconds', 'q_id',
         'q_position', 'q_lap_time_seconds', 'tm_id',
         't_id', 't_name', 't_tag',
@@ -222,7 +222,7 @@ def get_race_meta_data_and_race_results(cs, league, season, event_id, race):
     ]].iloc[[0],:]
 
     df_race = df[[
-         "rr_position", "d_name", "t_tag", "q_lap_time_seconds", "quali_points","rr_fastest_lap_seconds", "fastest_lap_points", "rr_race_time_seconds", "race_points", "points"
+         "rr_position", "d_name", "t_tag", "q_lap_time_seconds", "quali_points","rr_fastest_lap_seconds", "fastest_lap_points", "rr_race_time_seconds", "rr_penalty_description", "race_points", "points"
     ]]
 
     if not does_cs_contain_teams(cs):
