@@ -76,5 +76,16 @@ layout = html.Div([
     ]),
     dbc.Row([
         dbc.Col([html.H3("Drivers", className="graph_header"), dcc.Graph(id="driver_standings")])
+    ]),
+    dbc.Row([
+        dbc.Col(
+            dt.DataTable(
+                id='driver_standings_table', 
+                style_cell={
+                    'whiteSpace': 'pre-line'
+                }
+            ),
+            id="col_driver_standings_table"
+        )
     ])
 ])

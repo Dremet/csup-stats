@@ -28,7 +28,7 @@ def toggle_team_output(season_cs):
 )
 def update_team_standings_graph(season_cs, season_league, season):
     df = get_team_standings_cumulative(cs=season_cs, league=season_league, season=season)
-    df["track_car"] = df["r_track"]+" - "+df["r_car"]
+    df["track_car"] = df["r_track"]+"\n"+df["r_car"]
     
     df.sort_values("e_date", inplace=True, ascending=True)
     df = df.reset_index()
@@ -65,7 +65,7 @@ def update_team_standings_graph(season_cs, season_league, season):
     df_table.reset_index(inplace=True)
 
     teams_order_by_points_last_race = df.loc[df["e_date"]==df["e_date"].max(), :].sort_values("points_cum", ascending=False)["t_name"].to_list()
-    print(df_table)
+    
     df_table = df_table.loc[:, ["Track - Car", "Date"]+teams_order_by_points_last_race].sort_values("Date")
 
     standings_columns = [{"name": i, "id": i} for i in df_table.columns]
@@ -76,12 +76,12 @@ def update_team_standings_graph(season_cs, season_league, season):
 
 
 @app.callback(
-    dash.dependencies.Output('driver_standings', 'figure'),
+    [dash.dependencies.Output('driver_standings', 'figure'),dash.dependencies.Output("driver_standings_table", "columns"), dash.dependencies.Output("driver_standings_table", "data")],
     [dash.dependencies.Input('season_cs', 'value'), dash.dependencies.Input('season_league', 'value'), dash.dependencies.Input('season', 'value')],
 )
 def update_driver_standings_graph(season_cs, season_league, season):
     df = get_driver_standings_cumulative(cs=season_cs, league=season_league, season=season)
-    df["track_car"] = df["r_track"]+" - "+df["r_car"]
+    df["track_car"] = df["r_track"]+"\n"+df["r_car"]
 
     df.sort_values("e_date", inplace=True, ascending=True)
 
@@ -100,4 +100,27 @@ def update_driver_standings_graph(season_cs, season_league, season):
         # )
     )
 
-    return fig
+    # data table
+    df_table = df[["d_name", "track_car", "points_cum", "e_date"]]
+    
+    df_table.rename(columns={
+        "d_name" : "Driver", 
+        "track_car" : "Track - Car", 
+        "points_cum" : "Points (cumulative)",
+        "e_date" : "Date"
+        }, 
+        inplace=True
+    )
+    df_table.set_index(["Track - Car", "Date"], inplace =True)
+    df_table = df_table.pivot(columns="Driver")
+    df_table.columns = df_table.columns.droplevel()
+    df_table.reset_index(inplace=True)
+
+    teams_order_by_points_last_race = df.loc[df["e_date"]==df["e_date"].max(), :].sort_values("points_cum", ascending=False)["d_name"].to_list()
+    
+    df_table = df_table.loc[:, ["Track - Car", "Date"]+teams_order_by_points_last_race].sort_values("Date")
+
+    standings_columns = [{"name": i, "id": i} for i in df_table.columns]
+    standings_data = df_table.to_dict('records')
+
+    return fig, standings_columns, standings_data
