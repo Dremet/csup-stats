@@ -19,17 +19,10 @@ layout = html.Div([
             ),
             dbc.AccordionItem(
                 [
-                    html.P("In order to easier compare points, the season standings will be shown in a table as well. Will be located below the season standing graphs."),
-                    dbc.Alert("Low effort", color="success")
-                ],
-                title="Season Standings as Table",
-            ),
-            dbc.AccordionItem(
-                [
-                    html.P("For team championships: Table showing which driver is in which team."),
+                    html.P("As the ELO is now available, it can for example be used to show average ELO rankings in certain leagues. More to come."),
                     dbc.Alert("Medium effort", color="primary")
                 ],
-                title="Team Driver Mapping Table",
+                title="ELO Plots",
             ),
             dbc.AccordionItem(
                 [
@@ -65,13 +58,6 @@ layout = html.Div([
                     dbc.Alert("Medium effort", color="primary")
                 ],
                 title="Lap Table",
-            ),
-            dbc.AccordionItem(
-                [
-                    html.P("Show the current and historical ELO from all drivers. This data will be based on calculations by Muritopin and Bixon."),
-                    dbc.Alert("High effort", color="danger")
-                ],
-                title="ELO Ranking",
             ),
             dbc.AccordionItem(
                 [

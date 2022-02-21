@@ -20,28 +20,7 @@ def render_tab_content(active_tab):
     elif active_tab == "race_results":
         return results.layout
     elif active_tab == "drivers":
-        #return drivers.layout
-        return html.Div([
-                dbc.Row([
-                    dbc.Col([html.H3("Origin", className="graph_header"), dri.update_drivers_region_graph()]),
-                    dbc.Col([html.H3("Device", className="graph_header"), dri.update_drivers_device_graph()])
-                    ]
-                )
-                #,
-                # dbc.Row(dcc.Dropdown(
-                #     id='region',
-                #     options=[
-                #         {'label': 'World', 'value': 'world'},
-                #         {'label': 'Europe', 'value': 'EU'},
-                #         {'label': 'North America', 'value': 'NA'},
-                #         {'label': 'South America', 'value': 'SA'}
-                #     ],
-                #     value='world'
-                # )),
-                # dbc.Row([
-                    
-                # ])
-            ])
+        return drivers.layout
     elif active_tab == "misc":
         return misc.layout
     elif active_tab == "dev":

@@ -97,6 +97,24 @@ def read_driver_data():
 
     return df
 
+def get_current_elo(region):
+    with Connection() as conn:
+        cur = conn.cursor()
+
+        if region in ["EU", "NA", "SA"]:
+            sql = read_sql_template("get_latest_elo_by_region.sql")
+            cur.execute(sql, dict(zip(["region"], [region])))
+        else:
+            sql = read_sql_template("get_latest_elo.sql")
+            cur.execute(sql)
+
+        df = pd.DataFrame(cur.fetchall(), columns = ["d_name", "elo_ranking", "elo_date", "d_steering_device"])
+    
+    df.sort_values("elo_ranking", ascending=False, inplace=True)
+
+    df["rank"] = df["elo_ranking"].rank(method="min", ascending=False)
+    
+    return df
 
 def get_driver_results(cs, league, season):
     with Connection() as conn:
