@@ -1,5 +1,7 @@
 from functions import *
 from layout_helper import *
+import plotly.express as px
+from dash import dcc
 from main import app
 
 ###############################################
