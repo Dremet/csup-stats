@@ -1,6 +1,7 @@
+from calendar import calendar
 from main import app, server
 from layouts import base
-from callbacks import dropdowns as dd, descriptions as desc, standings as stand, results as res, drivers as dri, misc as mi
+from callbacks import dropdowns as dd, descriptions as desc, standings as stand, results as res, drivers as dri, misc as mi, calendar as cal
 import dash
 from dash import html
 import dash_bootstrap_components as dbc
@@ -8,7 +9,7 @@ import dash_bootstrap_components as dbc
 
 app.layout = base.layout
 
-from layouts import base, standings, results, drivers, misc, dev
+from layouts import base, standings, results, drivers, misc, calendar, dev
 
 @app.callback(
     dash.dependencies.Output("tab-content", "children"),
@@ -23,6 +24,8 @@ def render_tab_content(active_tab):
         return drivers.layout
     elif active_tab == "misc":
         return misc.layout
+    elif active_tab == "calendar":
+        return calendar.layout
     elif active_tab == "dev":
         return dev.layout
     

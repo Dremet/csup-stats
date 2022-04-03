@@ -34,6 +34,7 @@ tabs = dbc.CardHeader(
                 dbc.Tab(label="Race Results", tab_id="race_results", className="tab_heading"),
                 dbc.Tab(label="Drivers", tab_id="drivers", className="tab_heading"),
                 dbc.Tab(label="Misc", tab_id="misc", className="tab_heading"),
+                dbc.Tab(label="Calendar", tab_id="calendar", className="tab_heading"),
                 dbc.Tab(label="Development", tab_id="dev", className="tab_heading"),
             ],
             id="tabs", 
