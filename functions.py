@@ -196,12 +196,17 @@ def get_driver_results(cs, league, season):
         df.loc[(df.r_id == r_id) & (df.rr_fastest_lap_seconds == row["rr_fastest_lap_seconds"]), "has_fastest_race_lap"] = True
         df.loc[(df.r_id == r_id) & (df.q_lap_time_seconds == row["q_lap_time_seconds"]), "has_fastest_quali_lap"] = True
     
+    # if no quali times were available, but positions are given
+    if df["q_position"].sum() > 0:
+        df.loc[df["q_position"] == 1, "has_fastest_quali_lap"] = True
+
     df.loc[df.has_fastest_race_lap, "fastest_lap_points"] = df.loc[df.has_fastest_race_lap, "e_points_for_fastest_lap"]
     df.loc[df.has_fastest_quali_lap, "quali_points"] = df.loc[df.has_fastest_quali_lap, "e_points_for_pole"]
 
     #print(df[["rr_fastest_lap_seconds", "q_lap_time_seconds","has_fastest_race_lap", "has_fastest_quali_lap", "points"]])
 
     # assign race points depending on the e_points_pos_X columns, if a race position is given
+    print(df)
     df["race_points"] = df.apply(lambda x: x[f"e_points_pos_{int(x['rr_position'])}"] if not np.isnan(x['rr_position']) else 0, axis=1)
     
     # add race points to previously calculated points from fastest lap and pole
